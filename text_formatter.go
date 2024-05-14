@@ -28,6 +28,9 @@ func init() {
 
 // TextFormatter formats logs into text
 type TextFormatter struct {
+	// Set to true if don't want the key, e.g. time=, level=, msg=, etc
+	ExcludeKey bool
+
 	// Set to true to bypass checking for a TTY before outputting colors.
 	ForceColors bool
 
@@ -320,8 +323,10 @@ func (f *TextFormatter) appendKeyValue(b *bytes.Buffer, key string, value interf
 	if b.Len() > 0 {
 		b.WriteByte(' ')
 	}
-	b.WriteString(key)
-	b.WriteByte('=')
+	if !f.ExcludeKey {
+		b.WriteString(key)
+		b.WriteByte('=')
+	}
 	f.appendValue(b, value)
 }
 
